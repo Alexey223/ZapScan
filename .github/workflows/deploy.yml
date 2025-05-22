@@ -1,0 +1,22 @@
+name: Deploy Script
+
+on:
+  push:
+    branches:
+      - main # Измени, если у тебя другая ветка по умолчанию
+
+jobs:
+  deploy:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: PowerShell Version
+      run: Get-Host
+      shell: powershell
+
+    - name: Run Deployment Script
+      run: .\scripts\deploy.ps1
+      shell: powershell 

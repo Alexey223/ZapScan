@@ -1,0 +1,32 @@
+name: Run Tests
+
+on:
+  push:
+    branches:
+      - main # Or your main branch name
+
+jobs:
+  test:
+    runs-on: windows-latest # Use a Windows runner as the scripts are PowerShell
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup PowerShell
+      # Use a specific setup-action if needed for newer PowerShell versions,
+      # but windows-latest usually comes with PowerShell 5.1 and pwsh preinstalled.
+      run: pwsh -v # Log PowerShell version
+      shell: powershell
+
+    - name: Run Pester Tests
+      run: |
+        Import-Module Pester -RequiredVersion 5.0.0 -ErrorAction Stop
+        Invoke-Pester -Path .\Start-ZapScan.Tests.ps1 -OutputFormat NUnitXml -OutputPath test-results.xml
+      shell: powershell
+
+    - name: Upload test results
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-results
+        path: test-results.xml 
